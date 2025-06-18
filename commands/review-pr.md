@@ -1,5 +1,7 @@
-Please review the GitHub issue and pull request specified as arguments: $ARGUMENTS.
-The first number is the issue number, and the second is the pull request number.
+Please review the GitHub issue and its corresponding pull request specified
+
+issue_number: $ARGUMENTS
+pr_number: $ARGUMENTS
 
 **Instructions:**
 
