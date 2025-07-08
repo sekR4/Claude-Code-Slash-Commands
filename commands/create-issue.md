@@ -8,11 +8,11 @@ $ARGUMENTS
 
 Follow these steps to complete the task, make a todo list and think ultrahard:
 
-### 1 Repository reconnaissance  
+### 1 Repository reconnaissance  
 - Scan repo tree, open issues / PRs, `CONTRIBUTING.md`, and coding conventions.  
 - Note affected modules, naming patterns, test setup, CI rules.
 
-### 2 Intent clarification (interactive)  
+### 2 Intent clarification (interactive)  
 Ask **only the highest‑leverage questions** needed to lock down:  
 - Real problem to solve & desired outcome  
 - Success / done criteria  
@@ -20,24 +20,38 @@ Ask **only the highest‑leverage questions** needed to lock down:
 - Capture answers for later reference.
 - You MUST not continue with the next steps until the user answered.
 
-### 3 Precedent & Best-Practice Scan
+### 3 Precedent & Best-Practice Scan
 - Grep the repo for similar code, merged PRs, or design docs.
 - Note any internal helpers or patterns to reuse.
 - Pull **≤2** authoritative external refs (RFC, framework docs, blog post) *only if they add clear value*.
 - Add findings to **🛠️ Implementation Notes** and **📚 Resources**.
 
-### 4 Complexity check & decomposition  
-- Estimate scope; if >2 dev‑days, involves multiple domains, or contains ≥3 unknowns → **split into sub‑issues**.  
-- For each proposed sub‑issue provide: `Title`, `Goal`, `Exit Criteria`, and mark it `blocked‑by` the parent.
+### 4 Mandatory complexity assessment & decomposition  
+**MANDATORY**: Estimate scope using these criteria:
+- **Size**: >3 files OR >400 LOC?
+- **Domains**: Involves >2 technical areas (frontend, backend, database, infrastructure, etc.)?
+- **Acceptance criteria**: Would need >3 acceptance criteria?
+- **Unknowns**: Contains ≥2 unknowns or research tasks?
 
-### 5 Plan outline  
+**If ANY criterion is met → MUST split into sub‑issues**:
+- Create Epic (parent issue) with high-level goal only
+- Create 2-5 focused sub-issues, each ≤3 files AND ≤400 LOC
+- Parent issue gets `epic` label, sub-issues get `story`/`task` labels
+- Each sub-issue: `Title`, `Goal`, `Exit Criteria`, `Blocked by: #parent`
+
+### 5 Plan outline  
 Wrap the following in `<plan>` tags:  
-- Section order you’ll use  
+- Section order you'll use  
 - Labels / milestones / assignee logic  
 - Any repo‑specific conventions (folder, test, branch naming)  
 
-### 6 Draft the main GitHub Issue  
-After plan approval, output inside `<github_issue>` tags only:  
+### 6 Draft the GitHub Issue(s)  
+After plan approval, output based on complexity assessment:
+
+**If SIMPLE (no decomposition needed)**: Output single issue in `<github_issue>` tags
+**If COMPLEX (decomposition required)**: Output parent epic + sub-issues
+
+#### For SIMPLE issues, use this format in `<github_issue>` tags:
 
 ```md
 
@@ -89,15 +103,49 @@ After plan approval, output inside `<github_issue>` tags only:
 
 ```
 
-### 7 (If created) Sub‑Issues block  
-Enclose sub‑issues list in `<sub_issues>` tags, each entry formatted like:  
-`- [ ] #nnn – <Title> – Goal: … – Exit Criteria: …`
+### 7 For COMPLEX issues (Epic + Sub-issues)
+After outputting the parent epic, create actual sub-issues using `gh issue create` and update parent with task list.
 
-### 8 Final output rules
-- Present the complete GitHub issue content in ‹github_issue› tags.
-- Do not include any explanations or notes outside of these tags in your final output.
+#### Epic Format (in `<github_issue>` tags):
+```md
+### 📌 Title
+<high-level imperative>
 
-* Keep sentences short (<20 words), avoid jargon, spell out acronyms once.
+### 📝 Problem
+<why this matters, business impact>
+
+### 🎯 Goal / Outcome
+<observable result when complete>
+
+### 📋 Sub-Issues
+- [ ] #XXX - [Sub-issue title]
+- [ ] #XXX - [Sub-issue title]
+- [ ] #XXX - [Sub-issue title]
+```
+
+#### Sub-Issue Format (each in separate `<sub_issue>` tags):
+```md
+### 📌 Title
+<focused, actionable task>
+
+Part of #<parent-issue-number>
+
+### 🎯 Goal
+<specific outcome>
+
+### ✅ Exit Criteria
+1. Specific, testable condition
+2. Another specific condition
+3. (max 3 criteria)
+```
+
+### 8 Final output rules
+**For SIMPLE issues**: Present complete content in `<github_issue>` tags only.
+**For COMPLEX issues**: Present epic in `<github_issue>` tags, then each sub-issue in separate `<sub_issue>` tags.
+
+* Keep sentences short (<20 words), avoid jargon, spell out acronyms once.
+* Use GitHub CLI to create all issues after generation.
+* Update parent epic with actual sub-issue numbers after creation.
 
 ### Labels reference
 - `ktlo`: Essential maintenance to keep systems running (bug fixes, patches, operations).
@@ -105,6 +153,15 @@ Enclose sub‑issues list in `<sub_issues>` tags, each entry formatted like:
 - `improvement`: Enhancements to existing features (performance, UX, reliability, security).
 - `productivity`: Investments in code quality, developer experience, tooling, or scalability.
 
-Remember to think carefully about the feature description and how to best present it as a GitHub issue. Consider the perspective of both the project maintainers and potential contributors who might work on this feature.
+**Key principle**: Create focused, actionable issues (≤3 files, ≤400 LOC). When in doubt, decompose further.
 
-Your final output should consist of only the content within the ‹github_issue> tags, ready to be copied and pasted directly into GitHub. Make sure to use the GitHub CLI `gh issue create` to create the actual issue after you generate. Assign described labels based on the nature of the issue.
+**Implementation flow**:
+1. Generate issue content
+2. Use `gh issue create` to create parent (if epic) with `--label epic`
+3. For each sub-issue:
+   - Create with `gh issue create --label story` (or `task`) 
+   - Include "Part of #<parent-number>" in the body for tracking
+4. Update parent epic with actual sub-issue numbers in task list
+5. Note: Parent-child relationships in the GitHub UI require manual project board setup or can be set via:
+   - `gh project item-add <project> --owner <owner> --issue <number>`
+   - Then setting the "Parent issue" field if configured in <project>
