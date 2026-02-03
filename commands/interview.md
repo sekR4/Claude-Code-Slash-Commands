@@ -7,7 +7,7 @@ argument-hint: [request]
 $ARGUMENTS
 </request>
 
-Interview me about my request using the `AskUserQuestion` tool. Ultrathink before each question.
+Interview me about my request using the `AskUserQuestion` tool. Think hardest before each question.
 
 ## Interview Focus (WHAT and WHY, not HOW)
 - User intent and goals
@@ -18,8 +18,9 @@ Interview me about my request using the `AskUserQuestion` tool. Ultrathink befor
 - Constraints (business rules, performance, security)
 - Concerns, risks, edge cases
 - Dependencies on existing systems
+- Priority: What's the core 20% that delivers 80% of value? What's MVP vs nice-to-have?
 
-Continue until requirements are clear, then write the spec to `.specs/{spec-name}.md`.
+Continue until requirements are clear (~ P(understood) >= 90%), then write the spec to `.specs/{spec-name}.md`.
 
 ## Spec Template
 ```markdown

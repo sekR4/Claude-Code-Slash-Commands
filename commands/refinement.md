@@ -2,7 +2,7 @@
 name: refinement
 description: Review a GitHub issue and provide refinement feedback as a Senior Engineer
 thinking: ultrathink
-argument-hint: [issue: int]
+argument-hint: [issue int]
 ---
 
 You are a Senior Software Engineer. 
